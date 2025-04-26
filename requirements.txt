@@ -1,6 +1,6 @@
 selene
 pytest~=8.3.5
-selenium~=4.31.0
+selenium~=4.9.1
 allure-pytest
 allure-python-commons~=2.14.0
 python-dotenv~=1.1.0
