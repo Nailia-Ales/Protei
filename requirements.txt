@@ -1,4 +1,4 @@
-selene==1.0.2
+selene==1.0.1
 pytest~=8.3.5
 selenium~=4.9.1
 allure-pytest
