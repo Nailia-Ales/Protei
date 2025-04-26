@@ -2,7 +2,6 @@ import os
 from urllib.parse import quote_plus
 import pytest
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import InvalidSessionIdException
 from dotenv import load_dotenv
@@ -45,10 +44,10 @@ def driver():
     driver.set_window_size(1920, 1080)  # Масштаб экрана (ширина x высота)
 
     # Применяем настройки к selene
-    browser.config.driver = driver
-    browser.config.type_by_js = True
-    browser.config.window_height = 2500
-    browser.config.window_width = 1400
+    browser.driver = driver
+    browser.type_by_js = True
+    browser.window_height = 2500
+    browser.window_width = 1400
 
     yield driver  # Передаем управление тесту
 
