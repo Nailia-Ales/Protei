@@ -10,37 +10,34 @@ import utils.allure_attach as attach
 # Загрузка переменных окружения из файла .env
 load_dotenv()
 
-# Загрузка конфигураций из .env
-SELENOID_LOGIN = os.getenv("SELENOID_LOGIN")
-SELENOID_PASS = os.getenv("SELENOID_PASS")
-SELENOID_URL = os.getenv("SELENOID_URL")
-ENCODED_PASS = quote_plus(SELENOID_PASS)
-
-# Проверка, что все необходимые переменные окружения были загружены
-if not all([SELENOID_LOGIN, SELENOID_PASS, SELENOID_URL]):
-    raise ValueError("Отсутствуют необходимые переменные окружения: SELENOID_LOGIN, SELENOID_PASS, или SELENOID_URL")
-
 # Фикстура для WebDriver, которая запускает новый экземпляр браузера для каждого теста
 @pytest.fixture(scope="function")
 def driver():
+    browser.config.base_url = "https://crm.protei.ru/crm/crm.html#login"
     # Настройка опций для браузера
     options = Options()
-    options.page_load_strategy = "eager"
-    options.set_capability("browserName", "chrome")
-    options.set_capability("browserVersion", "128.0")
-    options.set_capability("selenoid:options", {
-        "enableVNC": True,
-        "enableVideo": True
-    })
+    selenoid_capabilities = {
+        "browserName": "chrome",
+        "browserVersion": "128.0",
+        "selenoid:options": {
+            "enableVNC": True,
+            "enableVideo": True
+        }
+    }
 
-    # Подключение удалённого WebDriver через авторизацию
+    # Получаем логин, пароль и URL из .env
+    selenoid_login = os.getenv("SELENOID_LOGIN")
+    selenoid_pass = os.getenv("SELENOID_PASS")
+    selenoid_url = os.getenv("SELENOID_URL")
+    encoded_pass = quote_plus(selenoid_pass)
+
+    # Подключаем удалённый WebDriver через авторизацию
+    options.capabilities.update(selenoid_capabilities)
     driver = webdriver.Remote(
-        command_executor=f"https://{SELENOID_LOGIN}:{ENCODED_PASS}@{SELENOID_URL}/wd/hub",
+        command_executor=f"https://{selenoid_login}:{encoded_pass}@{selenoid_url}/wd/hub",
         options=options
     )
 
-    # Установка базового URL для проекта
-    browser.config.base_url = "https://crm.protei.ru/crm/crm.html#login"
 
     # Применение настроек к Selene
     browser.config.driver = driver
