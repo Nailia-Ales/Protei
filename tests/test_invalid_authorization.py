@@ -13,7 +13,7 @@ from allure_commons.types import Severity
 @allure.feature("Сборка Allure-отчета о тестировании в Jenkins")
 @allure.story("Проверка валидации при неправильном вводе кред в форме авторизации (Selene)")
 @allure.link('https://github.com/', 'Testing')
-def test_invalid_authorization():
+def test_invalid_authorization(driver):
 
     # Шаг 1: Открытие страницы авторизации
     browser.open('https://crm.protei.ru/crm/crm.html#login')
@@ -31,7 +31,7 @@ def test_invalid_authorization():
     browser.element('[class="alert alert-danger m-t-15 text-center"]').should(have.text('Ошибка! Неправильно указаны логин или пароль'))
 
     # Закрытие браузера
-    browser.quit()
+#    browser.quit()
 
 
 # Тест с использованием Selenium
