@@ -1,6 +1,5 @@
 import os
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.remote.webdriver import WebDriver
 from urllib.parse import quote_plus
 import pytest
 from selenium import webdriver
@@ -15,6 +14,10 @@ SELENOID_LOGIN = os.getenv("SELENOID_LOGIN")
 SELENOID_PASS = os.getenv("SELENOID_PASS")
 SELENOID_URL = os.getenv("SELENOID_URL")
 ENCODED_PASS = quote_plus(SELENOID_PASS)
+
+# Проверка, что все необходимые переменные окружения были загружены
+if not all([SELENOID_LOGIN, SELENOID_PASS, SELENOID_URL]):
+    raise ValueError("Отсутствуют необходимые переменные окружения: SELENOID_LOGIN, SELENOID_PASS, или SELENOID_URL")
 
 # Фикстура для WebDriver, которая запускает новый экземпляр браузера для каждого теста
 @pytest.fixture(scope="function")
@@ -35,7 +38,6 @@ def driver():
         options=options
     )
 
-
     # Применяем настройки к Selene
     browser.config.driver = driver
     browser.config.type_by_js = True
@@ -45,12 +47,17 @@ def driver():
     # Передаем управление тесту
     yield driver
 
-    # Прикрепляем артефакты после выполнения теста
-    print(attach.__file__)
-    attach.add_html(browser)
-    attach.add_screenshot(browser)
-    attach.add_logs(browser)
-    attach.add_video(browser)
+    # Прежде чем завершать сессию, прикрепляем артефакты
+    try:
+        if driver.session_id:  # Проверяем, что сессия активна
+            print(attach.__file__)  # Это для отладки, чтобы видеть путь к модулю
+            attach.add_html(browser)
+            attach.add_screenshot(browser)
+            attach.add_logs(browser)
+            attach.add_video(browser)
+    except Exception as e:
+        print(f"Ошибка при прикреплении артефактов: {e}")
+
 
     # Закрытие браузера после выполнения теста
     driver.quit()

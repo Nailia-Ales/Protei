@@ -6,7 +6,6 @@ import allure
 from allure_commons.types import Severity
 
 
-
 # Тест с использованием Selene
 @allure.tag("web")
 @allure.severity(Severity.CRITICAL)
@@ -53,18 +52,17 @@ def test_invalid_authorization_selenium(driver):
     login_input.send_keys('user')
 
     # Шаг 4: Ввод неверных данных в поле пароля
-
     driver.find_element(By.ID, 'gwt-debug-auth-input-password').send_keys('1234')
 
-    # Шаг 4: Нажатие кнопки "Войти"
+    # Шаг 5: Нажатие кнопки "Войти"
     driver.find_element(By.ID, 'gwt-debug-auth-login-button').click()
 
-    # Шаг 5: Ожидание появления сообщения об ошибке
+    # Шаг 6: Ожидание появления сообщения об ошибке
     error_message = WebDriverWait(driver, 10).until(
-    EC.visibility_of_element_located((By.CLASS_NAME, 'alert-danger'))
+        EC.visibility_of_element_located((By.CLASS_NAME, 'alert-danger'))
     )
 
-    # Шаг 6: Проверка текста ошибки
+    # Шаг 7: Проверка текста ошибки
     assert "Ошибка! Неправильно указаны логин или пароль" in error_message.text
 
 
@@ -105,4 +103,3 @@ def test_invalid_authorization_selenium_with_fixture(driver):
 
     # Шаг 6: Проверка текста ошибки
     assert "Ошибка! Неправильно указаны логин или пароль" in error_message.text
-
