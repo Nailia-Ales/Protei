@@ -7,7 +7,6 @@ from selene import browser
 from dotenv import load_dotenv
 import utils.allure_attach as attach
 
-DEFAULT_BROWSER_VERSION = "128.0"
 
 def pytest_addoption(parser):
     parser.addoption(
@@ -26,13 +25,12 @@ def driver(request):
     # Настройка опций для браузера
 
     browser_version = request.config.getoption('--browser_version')
-    browser_version = browser_version if browser_version != "" else DEFAULT_BROWSER_VERSION
 
 
     options = Options()
     selenoid_capabilities = {
         "browserName": "chrome",
-        "browserVersion": "128.0",
+        "browserVersion": f"{browser_version}",
         "selenoid:options": {
             "enableVNC": True,
             "enableVideo": True
