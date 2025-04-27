@@ -7,14 +7,28 @@ from selene import browser
 from dotenv import load_dotenv
 import utils.allure_attach as attach
 
+DEFAULT_BROWSER_VERSION = "128.0"
+
+def pytest_addoption(parser):
+    parser.addoption(
+        '--browser_version',
+        default='128.0'
+    )
+
+
 # Загрузка переменных окружения из файла .env
 load_dotenv()
 
 # Фикстура для WebDriver, которая запускает новый экземпляр браузера для каждого теста
 @pytest.fixture(scope="function")
-def driver():
+def driver(request):
     browser.config.base_url = "https://crm.protei.ru/crm/crm.html#login"
     # Настройка опций для браузера
+
+    browser_version = request.config.getoption('--browser_version')
+    browser_version = browser_version if browser_version != "" else DEFAULT_BROWSER_VERSION
+
+
     options = Options()
     selenoid_capabilities = {
         "browserName": "chrome",

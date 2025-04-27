@@ -14,6 +14,7 @@ from allure_commons.types import Severity
 @allure.story("Проверка валидации при неправильном вводе кред в форме авторизации (Selene)")
 @allure.link('https://github.com/', 'Testing')
 def test_invalid_authorization():
+
     # Шаг 1: Открытие страницы авторизации
     browser.open('https://crm.protei.ru/crm/crm.html#login')
 
