@@ -7,6 +7,7 @@ from selene import browser
 from dotenv import load_dotenv
 import utils.allure_attach as attach
 
+# Загрузка переменных окружения из файла .env
 load_dotenv()
 
 # Загрузка конфигураций из .env
@@ -32,13 +33,16 @@ def driver():
         "enableVideo": True
     })
 
-    # Подключаем удалённый WebDriver через авторизацию
+    # Подключение удалённого WebDriver через авторизацию
     driver = webdriver.Remote(
         command_executor=f"https://{SELENOID_LOGIN}:{ENCODED_PASS}@{SELENOID_URL}/wd/hub",
         options=options
     )
 
-    # Применяем настройки к Selene
+    # Установка базового URL для проекта
+    browser.config.base_url = "https://crm.protei.ru/crm/crm.html#login"
+
+    # Применение настроек к Selene
     browser.config.driver = driver
     browser.config.type_by_js = True
     browser.config.window_height = 2500
@@ -47,17 +51,16 @@ def driver():
     # Передаем управление тесту
     yield driver
 
-    # Прежде чем завершать сессию, прикрепляем артефакты
+    # Прикрепление артефактов после выполнения теста
     try:
         if driver.session_id:  # Проверяем, что сессия активна
-            print(attach.__file__)  # Это для отладки, чтобы видеть путь к модулю
+            print(attach.__file__)  # Для отладки, чтобы видеть путь к модулю
             attach.add_html(browser)
             attach.add_screenshot(browser)
             attach.add_logs(browser)
             attach.add_video(browser)
     except Exception as e:
         print(f"Ошибка при прикреплении артефактов: {e}")
-
 
     # Закрытие браузера после выполнения теста
     driver.quit()
