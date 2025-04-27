@@ -1,18 +1,23 @@
 import os
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.remote.webdriver import WebDriver
 from urllib.parse import quote_plus
 import pytest
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.common.exceptions import InvalidSessionIdException
-from dotenv import load_dotenv
 from selene import browser
+from dotenv import load_dotenv
 import utils.allure_attach as attach
 
 load_dotenv()
 
+# Загрузка конфигураций из .env
+SELENOID_LOGIN = os.getenv("SELENOID_LOGIN")
+SELENOID_PASS = os.getenv("SELENOID_PASS")
+SELENOID_URL = os.getenv("SELENOID_URL")
+ENCODED_PASS = quote_plus(SELENOID_PASS)
 
-# Фикстура для настройки браузера
-@pytest.fixture(scope="function", autouse = True)
+# Фикстура для WebDriver, которая запускает новый экземпляр браузера для каждого теста
+@pytest.fixture(scope="function")
 def driver():
     # Настройка опций для браузера
     options = Options()
@@ -24,51 +29,28 @@ def driver():
         "enableVideo": True
     })
 
-#    options = Options()
-#    service = ChromeService()
-
-
-    # Получаем логин, пароль и URL из .env
-    selenoid_login = os.getenv("SELENOID_LOGIN")
-    selenoid_pass = os.getenv("SELENOID_PASS")
-    selenoid_url = os.getenv("SELENOID_URL")
-    encoded_pass = quote_plus(selenoid_pass)
-
-
     # Подключаем удалённый WebDriver через авторизацию
     driver = webdriver.Remote(
-        command_executor=f"https://{selenoid_login}:{encoded_pass}@{selenoid_url}/wd/hub",
+        command_executor=f"https://{SELENOID_LOGIN}:{ENCODED_PASS}@{SELENOID_URL}/wd/hub",
         options=options
     )
 
-    driver.set_window_size(1920, 1080)  # Масштаб экрана (ширина x высота)
 
-    # Применяем настройки к selene
-    browser.driver = driver
-    browser.type_by_js = True
-    browser.window_height = 2500
-    browser.window_width = 1400
+    # Применяем настройки к Selene
+    browser.config.driver = driver
+    browser.config.type_by_js = True
+    browser.config.window_height = 2500
+    browser.config.window_width = 1400
 
-    yield driver  # Передаем управление тесту
+    # Передаем управление тесту
+    yield driver
 
-    try:
-        print(attach.__file__)
-        attach.add_html(browser)
-        attach.add_screenshot(browser)
-        attach.add_logs(browser)
-        attach.add_video(browser)
-    except Exception as e:
-        print(f"Ошибка при прикреплении Allure-артефактов: {e}")
+    # Прикрепляем артефакты после выполнения теста
+    print(attach.__file__)
+    attach.add_html(browser)
+    attach.add_screenshot(browser)
+    attach.add_logs(browser)
+    attach.add_video(browser)
 
-        # Только потом — закрываем браузер
-    try:
-        if driver.session_id:  # защита от повторного закрытия
-            driver.quit()
-    except InvalidSessionIdException:
-        pass
-
-    try:
-        browser.quit()
-    except InvalidSessionIdException:
-        pass
-
+    # Закрытие браузера после выполнения теста
+    driver.quit()
