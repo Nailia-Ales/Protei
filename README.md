@@ -20,7 +20,7 @@
 Тестирование функции сайта, позволяющей сотрудникам пройти успешную авторизацию в личном кабинете.
 
 ### Проект реализован с использованием:
-<img src="design/icons/python-original.svg" width="50"> <img src="design/icons/pytest.png" width="50"> <img src="design/icons/selene.png" width="50"> <img src="design/icons/selenoid.png" width="50"> <img src="design/icons/jenkins.png" width="50"> <img src="design/icons/allure_report.png" width="50"> <img src="design/icons/allure_testops.png" width="50"> <img src="design/icons/jira.png" width="50"> <img src="design/icons/tg.png" width="50">
+<img src="design/icons/python-original.svg" width="50" alt=""> <img src="design/icons/pytest.png" width="50"> <img src="design/icons/selene.png" width="50"> <img src="design/icons/selenoid.png" width="50"> <img src="design/icons/jenkins.png" width="50"> <img src="design/icons/allure_report.png" width="50"> <img src="design/icons/allure_testops.png" width="50"> <img src="design/icons/jira.png" width="50"> <img src="design/icons/tg.png" width="50">
 
 ## Список реализованных проверок в автотестах
 
@@ -56,7 +56,7 @@ allure serve tests/allure-results
 
 <p>
 <img title="Allure общая статистика" src="design/img/allure.png">
-<img title="Allure пример отчета" src="design/img/allure2.png">
+<img title="Allure пример отчета" src="design/img/allure2.png" alt="">
 </p>
 
 ## Уведомление в Telegram о результатах проверки с использованием бота.
@@ -64,12 +64,12 @@ allure serve tests/allure-results
 Настроено автоматическое оповещение о результатах прохождения тестов в Telegram-бот с полной информацией о прогоне и ссылкой на Allure
 
 <p>
-<img title="Telegram" src="design/img/tg.png">
+<img title="Telegram" src="design/img/tg1.png">
 </p>
 
 ## Видео прохождения тестов на Selenoid
 
-Пример видеозаписи выполнения теста.
+Видеозапись с выполнением теста.
 
 <p>
 <img title="Video" src="design/img/video.gif" alt="video">
