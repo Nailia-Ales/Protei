@@ -68,7 +68,7 @@ allure serve tests/allure-results
 </p>
 
 
-## Видео прохождения тестов на Selenoid
+## Видео прохождения тестов на Selenoid:
 
 Видеозапись с выполнением теста.
 
