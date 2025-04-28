@@ -67,6 +67,7 @@ allure serve tests/allure-results
 <img title="Telegram" src="design/img/tg1.png">
 </p>
 
+
 ## Видео прохождения тестов на Selenoid
 
 Видеозапись с выполнением теста.
