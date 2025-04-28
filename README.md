@@ -75,3 +75,4 @@ allure serve tests/allure-results
 <img title="Video" src="design/img/video.gif" alt="video">
 </p>
 
+.
